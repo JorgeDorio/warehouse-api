@@ -2,14 +2,20 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Warehouse.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<Context>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Access the connection string from the environment variable
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+var apiUrl = Environment.GetEnvironmentVariable("API_URL");
+
+builder.Services.AddDbContext<Context>(options => options.UseNpgsql(connectionString));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
+
 
 var app = builder.Build();
 
@@ -21,9 +27,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(builder =>
 {
-    builder.WithOrigins("http://localhost:5173") // Allow requests from this origin
-            .AllowAnyMethod()   // Allow any HTTP method
-            .AllowAnyHeader();  // Allow any header
+    builder.WithOrigins(apiUrl)
+            .AllowAnyMethod()
+            .AllowAnyHeader();
 });
 
 app.UseHttpsRedirection();
@@ -31,5 +37,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<Context>();
+    context.Database.Migrate();
+}
 
 app.Run();
