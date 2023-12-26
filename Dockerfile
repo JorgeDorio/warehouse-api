@@ -1,7 +1,7 @@
 # Base image with .NET 8 runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-EXPOSE 80
+EXPOSE 8080
 
 # Create app directory
 WORKDIR /app
