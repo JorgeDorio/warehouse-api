@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Warehouse.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Access the connection string from the environment variable
@@ -16,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -25,11 +23,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Allow CORS requests from any origin
 app.UseCors(builder =>
 {
-    builder.WithOrigins(apiUrl)
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+    builder.AllowAnyOrigin();
+    builder.AllowAnyMethod();
+    builder.AllowAnyHeader();
 });
 
 app.UseHttpsRedirection();
