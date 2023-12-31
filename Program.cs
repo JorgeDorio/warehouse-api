@@ -1,19 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using Warehouse;
 using Warehouse.Data;
 using Warehouse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Access the connection string from the environment variable
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
-var apiUrl = Environment.GetEnvironmentVariable("API_URL");
-
-builder.Services.AddDbContext<Context>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<Context>(options => options.UseNpgsql(Settings.ConnectionString));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -23,7 +21,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Allow CORS requests from any origin
 app.UseCors(builder =>
 {
     builder.AllowAnyOrigin();
