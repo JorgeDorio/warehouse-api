@@ -21,9 +21,9 @@ public class AuthController(AuthService AuthService, IMapper mapper)
     }
 
     [HttpGet]
-    public bool CustomerHasRegister([FromQuery] string cpf)
+    public Dictionary<string, bool> CustomerHasRegister([FromQuery] string cpf)
     {
         var result = _AuthService.CustomerHasRegister(cpf);
-        return result;
+        return new Dictionary<string, bool> { { "isRegistered", result } };
     }
 }
