@@ -25,78 +25,20 @@ public class AuthService
         await _context.SaveChangesAsync();
     }
 
-    public string Login(Customer customer)
+    public bool CustomerHasRegister(string cpf)
     {
-        var user = _context.Customers.FirstOrDefault(c => c.Email == customer.Email);
-        if (user == null)
-        {
-            throw new NotFoundException("Usuário");
-        }
-
-        if (VerifyPassword(customer.Password, user.Password))
-        {
-            var token = GenerateToken(user);
-            return token;
-        }
-        else
-        {
-            throw new UnauthorizedException("Usuário ou senha invalidos");
-        }
+        var customer = _context.Customers.Where(c => c.Cpf == cpf).FirstOrDefault();
+        if (customer != null) return true;
+        return false;
     }
 
     private static string HashPassword(string password)
     {
-        var salt = GenerateSalt();
+        var salt = new byte[16];
+        RandomNumberGenerator.Fill(salt);
         var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
 
         var hash = pbkdf2.GetBytes(20);
         return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
-    }
-
-    private static byte[] GenerateSalt()
-    {
-        var salt = new byte[16];
-        RandomNumberGenerator.Fill(salt);
-        return salt;
-    }
-
-    private static bool VerifyPassword(string password, string hashedPassword)
-    {
-        var parts = hashedPassword.Split(':');
-        if (parts.Length != 2)
-        {
-            throw new FormatException("Invalid hashed password format");
-        }
-        var salt = Convert.FromBase64String(parts[0]);
-        var storedHash = Convert.FromBase64String(parts[1]);
-
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
-        var computedHash = pbkdf2.GetBytes(20);
-
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if (computedHash[i] != storedHash[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static string GenerateToken(Customer customer)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(Settings.JwtSecret ?? "");
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[]{
-                new Claim(ClaimTypes.Name,customer.Name)
-            }),
-            Expires = DateTime.UtcNow.AddHours(8),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
     }
 }

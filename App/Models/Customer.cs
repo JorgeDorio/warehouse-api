@@ -19,4 +19,7 @@ public class Customer
     public required string Address { get; set; }
 
     public required string Password { get; set; }
+
+    [StringLength(11)]
+    public required string Cpf { get; set; }
 }

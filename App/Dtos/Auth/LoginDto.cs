@@ -4,9 +4,8 @@ namespace Warehouse.Dtos.Auth;
 
 public class LoginDto
 {
-    [Required(ErrorMessage = "O e-mail é obrigatório")]
-    [EmailAddress]
-    public required string Email { get; set; }
+    [StringLength(11)]
+    public required string Cpf { get; set; }
 
     [Required(ErrorMessage = "A senha é obrigatória")]
     public required string Password { get; set; }

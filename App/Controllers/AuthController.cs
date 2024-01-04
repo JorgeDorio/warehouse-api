@@ -20,11 +20,10 @@ public class AuthController(AuthService AuthService, IMapper mapper)
         await _AuthService.Register(customer);
     }
 
-    [HttpPost("Login")]
-    public string Login([FromBody] LoginDto loginDto)
+    [HttpGet]
+    public bool CustomerHasRegister([FromQuery] string cpf)
     {
-        var customer = _mapper.Map<Customer>(loginDto);
-        var result = _AuthService.Login(customer);
+        var result = _AuthService.CustomerHasRegister(cpf);
         return result;
     }
 }
