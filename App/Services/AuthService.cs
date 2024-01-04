@@ -20,7 +20,6 @@ public class AuthService
 
     public async Task Register(Customer customer)
     {
-        customer.Password = HashPassword(customer.Password);
         _context.Add(customer);
         await _context.SaveChangesAsync();
     }
@@ -30,15 +29,5 @@ public class AuthService
         var customer = _context.Customers.Where(c => c.Cpf == cpf).FirstOrDefault();
         if (customer != null) return true;
         return false;
-    }
-
-    private static string HashPassword(string password)
-    {
-        var salt = new byte[16];
-        RandomNumberGenerator.Fill(salt);
-        var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 100000, HashAlgorithmName.SHA256);
-
-        var hash = pbkdf2.GetBytes(20);
-        return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
     }
 }

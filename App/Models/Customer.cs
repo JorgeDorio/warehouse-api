@@ -16,10 +16,8 @@ public class Customer
     [Phone]
     public required string Phone { get; set; }
 
-    public required string Address { get; set; }
-
-    public required string Password { get; set; }
-
     [StringLength(11)]
     public required string Cpf { get; set; }
+
+    public required DateTime Birth { get; set; }
 }

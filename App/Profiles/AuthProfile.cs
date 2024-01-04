@@ -8,7 +8,6 @@ public class AuthProfile : Profile
 {
     public AuthProfile()
     {
-        CreateMap<LoginDto, Customer>();
         CreateMap<RegisterDto, Customer>();
     }
 }
