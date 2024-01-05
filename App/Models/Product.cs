@@ -6,7 +6,6 @@ public class Product
 {
     [Key]
     public int Id { get; set; }
-    [Required]
     public required string Name { get; set; }
     public string? Category { get; set; }
     public string? Subcategory { get; set; }

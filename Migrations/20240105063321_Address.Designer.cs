@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Warehouse.Data;
@@ -11,9 +12,11 @@ using Warehouse.Data;
 namespace Warehouse.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240105063321_Address")]
+    partial class Address
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,8 +60,6 @@ namespace Warehouse.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("Adresses");
                 });
@@ -219,17 +220,6 @@ namespace Warehouse.Migrations
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("Warehouse.Models.Address", b =>
-                {
-                    b.HasOne("Warehouse.Models.Customer", "Customer")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("Warehouse.Models.StockMovement", b =>
                 {
                     b.HasOne("Warehouse.Models.Product", "Product")
@@ -247,11 +237,6 @@ namespace Warehouse.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Warehouse.Models.Customer", b =>
-                {
-                    b.Navigation("Addresses");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Product", b =>
