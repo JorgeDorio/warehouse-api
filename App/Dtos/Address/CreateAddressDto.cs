@@ -11,6 +11,9 @@ public class CreateAddressDto
     [StringLength(8, ErrorMessage = "CEP inválido")]
     public required string Cep { get; set; }
 
+    public required string Street { get; set; }
+    public required int Number { get; set; }
+
     public string? Complement { get; set; }
 
     [Required(ErrorMessage = "O bairro do endereço é obrigatório")]

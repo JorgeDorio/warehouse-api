@@ -19,4 +19,11 @@ public class AddressController(AddressService AddressService, IMapper mapper)
         var address = _mapper.Map<Address>(addressDto);
         await _addressService.Create(address);
     }
+
+    [HttpGet]
+    public IEnumerable<Address> ReadByCustomerId([FromQuery] int id)
+    {
+        var result = _addressService.ReadByCustomerId(id);
+        return result;
+    }
 }

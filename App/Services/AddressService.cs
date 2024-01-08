@@ -1,11 +1,5 @@
-using System.Security.Cryptography;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using Warehouse.Data;
 using Warehouse.Models;
-using Warehouse.Errors;
 
 namespace Warehouse.Services;
 
@@ -22,5 +16,11 @@ public class AddressService
     {
         _context.Add(address);
         await _context.SaveChangesAsync();
+    }
+
+    public IEnumerable<Address> ReadByCustomerId(int id)
+    {
+        var result = _context.Adresses.Where(a => a.CustomerId == id);
+        return result;
     }
 }

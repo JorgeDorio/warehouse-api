@@ -8,6 +8,8 @@ public class Address
     [Key]
     public int Id { get; set; }
     public required string Surname { get; set; }
+    public required string Street { get; set; }
+    public required int Number { get; set; }
     public required string Cep { get; set; }
     public string? Complement { get; set; }
     public required string Neighborhood { get; set; }
