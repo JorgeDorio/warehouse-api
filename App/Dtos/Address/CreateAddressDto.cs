@@ -8,7 +8,7 @@ public class CreateAddressDto
     public required string Surname { get; set; }
 
     [Required(ErrorMessage = "O CEP do endereço é obrigatório")]
-    [StringLength(8, ErrorMessage = "CEP inválido")]
+    [StringLength(9, ErrorMessage = "CEP inválido")]
     public required string Cep { get; set; }
 
     public required string Street { get; set; }

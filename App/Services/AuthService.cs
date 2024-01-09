@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Warehouse.Data;
 using Warehouse.Models;
 using Warehouse.Errors;
+using System.Text.RegularExpressions;
 
 namespace Warehouse.Services;
 
@@ -26,6 +27,7 @@ public class AuthService
 
     public bool CustomerHasRegister(string cpf)
     {
+        cpf = Regex.Replace(cpf, "[^0-9]", ""); // Somente números
         var customer = _context.Customers.Where(c => c.Cpf == cpf).FirstOrDefault();
         if (customer != null) return true;
         return false;
